@@ -1,11 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsUrl, Matches, Max, Min } from 'class-validator';
 
-export class CreateUserDto {
-  @ApiProperty({ example: 'uniqueuser', required: true })
+export class StoreAnswerDto {
+  @ApiProperty({ example: 1, required: true })
   @IsNotEmpty()
-  @Matches(/^[a-zA-Z0-9_-]{3,20}$/, { message: 'username not valid' })
-  username: string;
+  citiesDataId: number;
+
+  @ApiProperty({ example: 1, required: true })
+  @IsNotEmpty()
+  userId: number;
+
+  @ApiProperty({ example: true })
+  @IsNotEmpty()
+  isCorrect: boolean;
 
   // @ApiProperty({ example: 2, required: true })
   // @IsNotEmpty()

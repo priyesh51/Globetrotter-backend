@@ -21,14 +21,32 @@ import { plainToInstance } from 'class-transformer';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  /**
-   * Create a user
-   * @param createUserDto
-   * @returns
-   */
   @Post()
   @ApiOperation({
+    summary: 'User not found then create and get or found then only get',
+  })
+  @HttpCode(HttpStatus.ACCEPTED)
+  async userCreateOrGet(@Body() createUserDto: CreateUserDto) {
+    const user = await this.usersService.userCreateOrGet(createUserDto);
+
+    return {
+      statusCode: HttpStatus.ACCEPTED,
+      data: plainToInstance(User, user, {
+        enableImplicitConversion: true,
+        excludeExtraneousValues: true,
+      }),
+    };
+  }
+
+  // /**
+  //  * Create a user
+  //  * @param createUserDto
+  //  * @returns
+  //  */
+  @Post('create')
+  @ApiOperation({
     summary: 'Create a user',
+    deprecated: true,
   })
   @HttpCode(HttpStatus.ACCEPTED)
   async createUser(@Body() createUserDto: CreateUserDto) {

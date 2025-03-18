@@ -11,6 +11,26 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
+  async userCreateOrGet(createUserDto: CreateUserDto) {
+    createUserDto.username = createUserDto.username.toLowerCase().trim();
+
+    let user = await this.userRepository.findOne({
+      where: { username: createUserDto.username },
+    });
+
+    if (!user) {
+      return await this.userRepository.save(
+        this.userRepository.create({
+          username: createUserDto.username,
+          score: 0,
+          link: process.env.APP_URL.concat(
+            `/invite?username=${createUserDto.username}`,
+          ),
+        }),
+      );
+    }
+    return user;
+  }
   /**
    * Create a user
    * @param createUserDto
@@ -27,14 +47,14 @@ export class UsersService {
       await this.userRepository.save(
         this.userRepository.create({
           username: createUserDto.username,
-          score: createUserDto.score,
-          link: createUserDto.link,
+          // score: createUserDto.score,
+          // link: createUserDto.link,
         }),
       );
     } else {
       await this.userRepository.update(user.id, {
-        score: createUserDto.score,
-        link: createUserDto.link,
+        // score: createUserDto.score,
+        // link: createUserDto.link,
       });
     }
   }
